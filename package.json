@@ -1,5 +1,5 @@
 {
-  "name": "build-week-scaffolding-node",
+  "name": "water-my-plants",
   "version": "1.0.0",
   "scripts": {
     "start": "node index.js",
@@ -7,10 +7,10 @@
     "migrate": "knex migrate:latest",
     "rollback": "knex migrate:rollback",
     "seed": "knex seed:run",
-    "migrateh": "heroku run knex migrate:latest -a YOUR_HEROKU_APP_NAME_HERE",
-    "rollbackh": "heroku run knex migrate:rollback -a YOUR_HEROKU_APP_NAME_HERE",
-    "databaseh": "heroku pg:psql -a YOUR_HEROKU_APP_NAME_HERE",
-    "seedh": "heroku run knex seed:run -a YOUR_HEROKU_APP_NAME_HERE",
+    "migrateh": "heroku run knex migrate:latest -a mywaterplants",
+    "rollbackh": "heroku run knex migrate:rollback -a mywaterplants",
+    "databaseh": "heroku pg:psql -a mywaterplants",
+    "seedh": "heroku run knex seed:run -a mywaterplants",
     "test": "cross-env NODE_ENV=testing jest --watchAll --verbose --runInBand",
     "deploy": "git push heroku main"
   },
