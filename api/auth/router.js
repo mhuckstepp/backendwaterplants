@@ -1,16 +1,16 @@
 const router = require("express").Router();
-const { checkUserExists, validateUser } = require("./middleware");
-const { addUser, makeToken } = require("./models");
+const { validateLogin, validateRegister, hashPass, makeToken } = require("./middleware");
+const { addUser } = require("./models");
 
-router.post("/login", checkUserExists, (req, res, next) => {
+router.post("/login", validateLogin, (req, res, next) => {
   const token = makeToken(req.body)
-  res.json("welcome to auth router login");
+  res.status(200).json({message: `welcome back ${req.body.email}`, token})
 });
 
-router.post("/register", validateUser, (req, res, next) => {
+router.post("/register", validateRegister, hashPass, async (req, res, next) => {
   addUser(req.body)
     .then((user) => {
-      res.json(user);
+      res.status(201).json(user);
     })
     .catch(next);
 });

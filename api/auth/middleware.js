@@ -1,26 +1,58 @@
-const db = require("../data/db-config");
 const {getUserByEmail} = require('./models')
+const bcrypt = require('bcrypt')
+const jwt = require("jsonwebtoken");
+const secret  = process.env.JWT_SECRET
+const hashes = process.env.HASH_NUM
 
-const checkUserExists = (req, res, next) => {
-  getUserByEmail(req.body.user_email).then(user => {
-    if(!user){
-      res.status(400).json('invalid credentials')
-    } else{
-      next();
-    }
-  })
+
+const hashPass = (req, res, next) => {
+  const hash = bcrypt.hashSync(req.body.password, 6)
+  req.body.password = hash
+  next()
+}
+
+const makeToken = (user) => {
+  const payload = {
+      subject: user.id,
+      email: user.email
+  }
+  const options = {
+      expiresIn: "60 minutes"
+  }
+  const token  = jwt.sign(payload, secret, options)
+  return token
 };
 
-const validateUser = (req, res, next) => {
-  const { user_email, user_password} = req.body
-  if(!user_email || !user_password){
-    res.status(400).json('provide a valid email and password')
+const validateLogin = async (req, res, next) => {
+  const user = await getUserByEmail(req.body.email)
+  if (!user){
+    res.status(400).json('make sure your email is spelled correctly and has been registered!')
   } else {
-    next();
+    req.foundUser = user
+  }
+  if (bcrypt.compareSync(req.body.password, user.user_password)){
+    req.user = user
+    next()
+  } else {
+    res.status(400).json('invalid credentials')
+  }
+};
+
+const validateRegister = async (req, res, next) => {
+  const { email, password } = req.body
+  const user = await getUserByEmail(email)
+  if(!email || !email.trim() || !password || !password.trim()){
+    res.status(400).json('provide a valid email and password')
+  } else if (user){
+    res.status(400).json('You are already registered, please go to login')
+  } else {
+    next()
   }
 };
 
 module.exports = {
-  checkUserExists,
-  validateUser,
+  validateLogin,
+  validateRegister,
+  makeToken,
+  hashPass
 };
