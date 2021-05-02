@@ -4,11 +4,11 @@
   "scripts": {
     "start": "node index.js",
     "server": "nodemon index.js",
-    "migrate": "knex migrate:latest",
     "rollback": "knex migrate:rollback",
+    "migrate": "knex migrate:latest",
     "seed": "knex seed:run",
-    "migrateh": "heroku run knex migrate:latest -a mywaterplants",
     "rollbackh": "heroku run knex migrate:rollback -a mywaterplants",
+    "migrateh": "heroku run knex migrate:latest -a mywaterplants",
     "databaseh": "heroku pg:psql -a mywaterplants",
     "seedh": "heroku run knex seed:run -a mywaterplants",
     "test": "cross-env NODE_ENV=testing jest --watchAll --verbose --runInBand",
