@@ -3,7 +3,7 @@ const { validateLogin, validateRegister, hashPass, makeToken } = require("./midd
 const { addUser } = require("./models");
 
 router.post("/login", validateLogin, (req, res, next) => {
-  const token = makeToken(req.body)
+  const token = makeToken(req.foundUser)
   res.status(200).json({message: `welcome back ${req.body.email}`, token})
 });
 

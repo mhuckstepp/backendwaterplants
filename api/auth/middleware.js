@@ -12,9 +12,10 @@ const hashPass = (req, res, next) => {
 }
 
 const makeToken = (user) => {
+  console.log(user);
   const payload = {
-      subject: user.id,
-      email: user.email
+      subject: user.user_id,
+      email: user.user_email
   }
   const options = {
       expiresIn: "60 minutes"

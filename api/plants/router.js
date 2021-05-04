@@ -1,13 +1,34 @@
 const router = require("express").Router();
-const { getPlantsByUser } = require("./models");
-const restrictAccess = require('../auth/restrictAccess')
+const { getPlantsByUser, getPlants, addPlant, delPlant } = require("./models");
+const restrictAccess = require("../auth/restrictAccess");
+const { checkPlantExists } = require('./middleware')
 
-router.post("/", (req, res, next) => {
-  res.status(200).json({message: `welcome back ${req.body.email}`, token})
+router.post("/", restrictAccess, (req, res, next) => {
+  addPlant(req.decodedToken.subject, req.body).then(plant => {
+    res.status(201).json(plant)
+  }).catch(next)
+});
+
+router.delete("/:id", restrictAccess, checkPlantExists, (req, res, next) => {
+  delPlant(req.params.id).then(plant => {
+    res.status(201).json(`plant with id:${req.params.id} was deleted`)
+  }).catch(next)
 });
 
 router.get("/", restrictAccess, (req, res, next) => {
-      res.status(201).json('plants');
+  getPlantsByUser(req.decodedToken)
+    .then((plants) => {
+      res.status(201).json(plants);
+    })
+    .catch(next);
+});
+
+router.get("/all", restrictAccess, (req, res, next) => {
+  getPlants()
+    .then((plants) => {
+      res.status(201).json(plants);
+    })
+    .catch(next);
 });
 
 router.use("/", (req, res, next) => {
