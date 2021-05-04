@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { getPlantsByUser, getPlants, addPlant, delPlant } = require("./models");
+const { getPlantsByUser, getPlants, addPlant, delPlant, updatePlant } = require("./models");
 const restrictAccess = require("../auth/restrictAccess");
 const { checkPlantExists } = require('./middleware')
 
@@ -10,8 +10,14 @@ router.post("/", restrictAccess, (req, res, next) => {
 });
 
 router.delete("/:id", restrictAccess, checkPlantExists, (req, res, next) => {
-  delPlant(req.params.id).then(plant => {
+  delPlant(req.params.id).then(plant => { //eslint-disable-line
     res.status(201).json(`plant with id:${req.params.id} was deleted`)
+  }).catch(next)
+});
+
+router.put("/:id", restrictAccess, checkPlantExists, (req, res, next) => {
+  updatePlant(req.params.id, req.body).then(plant => {
+    res.status(201).json(plant)
   }).catch(next)
 });
 
