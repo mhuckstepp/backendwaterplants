@@ -18,7 +18,7 @@ const makeToken = (user) => {
       email: user.user_email
   }
   const options = {
-      expiresIn: "60 minutes"
+      expiresIn: "600 minutes"
   }
   const token  = jwt.sign(payload, secret, options)
   return token
