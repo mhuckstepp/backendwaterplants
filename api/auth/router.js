@@ -14,7 +14,6 @@ router.post("/login", validateLogin, (req, res, next) => {
 });
 
 router.get("/", restrictAccess, (req, res, next) => {
-  console.log('hit get');
   getUserByEmail(req.decodedToken.email)
     .then((user) => {
       res.status(200).json({
@@ -29,7 +28,8 @@ router.get("/", restrictAccess, (req, res, next) => {
 router.post("/register", validateRegister, hashPass, async (req, res, next) => {
   addUser(req.body)
     .then((user) => {
-      res.status(201).json(user);
+      const token = makeToken({user})
+      res.status(201).json(user, token);
     })
     .catch(next);
 });
