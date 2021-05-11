@@ -28,7 +28,7 @@ router.get("/", restrictAccess, (req, res, next) => {
 router.post("/register", validateRegister, hashPass, async (req, res, next) => {
   addUser(req.body)
     .then((user) => {
-      const token = makeToken({user})
+      const token = makeToken(user)
       res.status(201).json(user, token);
     })
     .catch(next);
