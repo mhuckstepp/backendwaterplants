@@ -29,7 +29,7 @@ router.post("/register", validateRegister, hashPass, async (req, res, next) => {
   addUser(req.body)
     .then((user) => {
       const token = makeToken(user)
-      res.status(201).json(user, token);
+      res.status(201).json({token});
     })
     .catch(next);
 });
