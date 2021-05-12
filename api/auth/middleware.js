@@ -21,6 +21,7 @@ const makeToken = (user) => {
       expiresIn: "600 minutes"
   }
   const token  = jwt.sign(payload, secret, options)
+  
   return token
 };
 

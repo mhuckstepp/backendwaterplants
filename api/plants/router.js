@@ -4,6 +4,7 @@ const restrictAccess = require("../auth/restrictAccess");
 const { checkPlantExists } = require('./middleware')
 
 router.post("/", restrictAccess, (req, res, next) => {
+  console.log(req.decodedToken);
   addPlant(req.decodedToken.subject, req.body).then(plant => {
     res.status(201).json(plant)
   }).catch(next)

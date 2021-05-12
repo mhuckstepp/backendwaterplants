@@ -59,7 +59,7 @@ const updatePlant = async (plantId, plant) => {
 
 const addPlant = async (user_id, plant) => {
   const { nickname, water_freq, species, img, baseDate } = plant;
-
+  console.log(user_id);
   let plant_id;
   await db.transaction(async (trx) => {
     // insert species
