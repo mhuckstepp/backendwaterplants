@@ -24,8 +24,8 @@ const addUser = async (user) => {
 };
 
 const editUser = async (user_id, newUser) => {
-  let success = await db("users").where({ user_id }).update({user_email: newUser.email, user_password: newUser.password})
-  return success
+  await db("users").where({ user_id }).update({user_email: newUser.email, user_password: newUser.password})
+  return getUserById(user_id);
 };
 
 module.exports = {

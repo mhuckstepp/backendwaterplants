@@ -20,7 +20,7 @@ router.post("/login", validateLogin, (req, res, next) => {
 
 router.put("/", restrictAccess, hashPass, (req, res, next) => {
   editUser(req.decodedToken.subject, req.body).then(user => {
-    const token = makeToken(req.body);
+    const token = makeToken(user);
     res.status(200).json({ message:'user info updated', token, user });
   }).catch(next)
 });
