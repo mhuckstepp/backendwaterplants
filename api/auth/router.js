@@ -5,12 +5,24 @@ const {
   hashPass,
   makeToken,
 } = require("./middleware");
-const { addUser, getUserByEmail } = require("./models");
+const { addUser, getUserByEmail, editUser } = require("./models");
 const restrictAccess = require("./restrictAccess");
 
 router.post("/login", validateLogin, (req, res, next) => {
   const token = makeToken(req.foundUser);
   res.status(200).json({ message: `welcome back ${req.body.email}`, token });
+});
+
+router.post("/login", validateLogin, (req, res, next) => {
+  const token = makeToken(req.foundUser);
+  res.status(200).json({ message: `welcome back ${req.body.email}`, token });
+});
+
+router.put("/", restrictAccess, hashPass, (req, res, next) => {
+  editUser(req.decodedToken.subject, req.body).then(user => {
+    const token = makeToken(req.body);
+    res.status(200).json({ message:'user info updated', token, user });
+  }).catch(next)
 });
 
 router.get("/", restrictAccess, (req, res, next) => {
