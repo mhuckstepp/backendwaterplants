@@ -21,15 +21,15 @@ const getPlantsByPlant = (plantId) => {
     .join("species as s", "p.species_id", "s.id")
     .join("users as u", "p.user_id", "u.user_id")
     .select("p.*", "s.species")
-    .where({ "p.id": plantId }).first();
+    .where({ "p.id": plantId })
+    .first();
 };
 
 const updatePlant = async (plantId, plant) => {
-  
-  let plant_id
-  
+  let plant_id;
+
   await db.transaction(async (trx) => {
-    const {nickname, water_freq, img, baseDate, species} = plant
+    const { nickname, water_freq, img, baseDate, species } = plant;
     // insert species
     let species_id;
     const [existing_species] = await trx("species").where({ species });
@@ -41,25 +41,29 @@ const updatePlant = async (plantId, plant) => {
       species_id = id;
     }
 
-  let [{id}] = await db("plants as p")
-    .join("species as s", "p.species_id", "s.id")
-    .join("users as u", "p.user_id", "u.user_id")
-    .select("p.*", "s.species")
-    .where({ "p.id": plantId }).first().update({
-      nickname,
-      water_freq,
-      species_id,
-      img,
-      baseDate
-    }, ['id'])
-    plant_id = id
-  })
-  return getPlantsByPlant(plant_id)
-}
+    let [{ id }] = await db("plants as p")
+      .join("species as s", "p.species_id", "s.id")
+      .join("users as u", "p.user_id", "u.user_id")
+      .select("p.*", "s.species")
+      .where({ "p.id": plantId })
+      .first()
+      .update(
+        {
+          nickname,
+          water_freq,
+          species_id,
+          img,
+          baseDate,
+        },
+        ["id"]
+      );
+    plant_id = id;
+  });
+  return getPlantsByPlant(plant_id);
+};
 
 const addPlant = async (user_id, plant) => {
   const { nickname, water_freq, species, img, baseDate } = plant;
-  console.log(user_id);
   let plant_id;
   await db.transaction(async (trx) => {
     // insert species
@@ -89,5 +93,5 @@ module.exports = {
   addPlant,
   delPlant,
   getPlantsByPlant,
-  updatePlant
+  updatePlant,
 };

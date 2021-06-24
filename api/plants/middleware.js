@@ -4,7 +4,6 @@ const checkPlantExists = (req, res, next) => {
   getPlantsByPlant(req.params.id)
     .then((plant) => {
       if (plant) {
-        console.log(plant);
         next();
       } else {
         res
