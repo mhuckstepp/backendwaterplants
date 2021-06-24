@@ -25,12 +25,10 @@ const addUser = async (user) => {
 };
 
 const editUser = async (user_id, newUser) => {
-  console.log("edit user", user_id, newUser);
   let user = await db("users")
     .where({ user_id })
     .first()
     .update({ user_email: newUser.email, user_password: newUser.password });
-  console.log("get", user);
   return getUserById(user_id);
 };
 
