@@ -1,29 +1,18 @@
-const nodeMailer = require('nodemailer')
+const sgMail = require("@sendgrid/mail");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-const password = process.env.EMAIL_PASSWORD;
-
-let transporter = nodeMailer.createTransport({
-        host: 'smtp.gmail.com',
-        port: 465,
-        secure: true,
-        auth: {
-            // should be replaced with real sender's account
-            user: 'mhuckstepp@gmail.com',
-            pass: password
-        }
-    });
-    let mailOptions = {
-        // should be replaced with real recipient's account
-        to: 'info@gmail.com',
-        subject: req.body.subject,
-        text: req.body.message
-    };
-    transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            return console.log(error);
-        }
-        console.log('Message %s sent: %s', info.messageId, info.response);
-    });
-    res.writeHead(301, { Location: 'index.html' });
-    res.end();
+const msg = {
+  to: "mhuckstepp@gmail.com", // Change to your recipient
+  from: "mhuckstepp@gmail.com", // Change to your verified sender
+  subject: "Sending with SendGrid is Fun",
+  text: "and easy to do anywhere, even with Node.js",
+  html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+};
+sgMail
+  .send(msg)
+  .then(() => {
+    console.log("Email sent");
+  })
+  .catch((error) => {
+    console.error(error);
   });
