@@ -2,28 +2,39 @@ const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const db = require("./api/data/db-config");
 
-const recipt = "mhuckstepp@gmail.com";
-const conter = {
-  subject: "HELLOOO",
-  text: " nice to e-meet you",
-};
-
-const mailSender = async (recip, content) => {
+const mailSender = async (recip, plants) => {
   const msg = {
     to: recip,
     from: "mhuckstepp@gmail.com",
-    subject: content.subject,
-    text: content.text,
-    html: `<p>${content.text}</p>`,
+    subject: "Plants to water today!",
+    text: `Please water these plants today! ${plants}.`,
+    html: `<p> Please water these plants today! ${plants}. <p>`,
   };
   sgMail
     .send(msg)
     .then(() => {
-      console.log("Email sent");
+      console.log("Email sent", msg);
     })
     .catch((error) => {
       console.error(error);
     });
 };
 
-mailSender(recipt, conter);
+const scheduledRun = async () => {
+  let users = await db("users");
+  users.forEach(async (user) => {
+    let plantsToWater = "";
+    let plantsByUser = await db("plants").where({ user_id: user.user_id });
+    plantsByUser.forEach(async (plant) => {
+      let dayCounter = Math.floor((Date.now() - plant.baseDate) / 86400000);
+      if (dayCounter % plant.water_freq === 0) {
+        plantsToWater =`, ${plant.nickname}`;
+      }
+    });
+    if(plantsToWater.length > 1){
+      mailSender(user.user_email, plantsToWater);
+    }
+  });
+};
+
+scheduledRun();
