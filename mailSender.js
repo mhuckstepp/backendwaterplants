@@ -7,7 +7,7 @@ const mailSender = (recip, content) => {
     from: "mhuckstepp@gmail.com",
     subject: content.subject,
     text: content.text,
-    html: "<strong>and easy to do anywhere, even with Node.js</strong>",
+    html: `<p>${content.text}</p>`,
   };
   sgMail
     .send(msg)
@@ -17,8 +17,4 @@ const mailSender = (recip, content) => {
     .catch((error) => {
       console.error(error);
     });
-};
-
-module.exports = {
-  mailSender,
 };
