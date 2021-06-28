@@ -7,8 +7,8 @@ const mailSender = async (recip, plants) => {
     to: recip,
     from: "mhuckstepp@gmail.com",
     subject: "Plants to water today!",
-    text: `Please water these plants today! ${plants}.`,
-    html: `<p> Please water these plants today! ${plants}. <p>`,
+    text: `Please water these plants today! ${plants}. To view all your plants, please visit https://water-my-plants-mhuckstepp.vercel.app/myplants`,
+    html: `Please water these plants today! ${plants}. To view all your plants, please visit https://water-my-plants-mhuckstepp.vercel.app/myplants <p>`,
   };
   sgMail
     .send(msg)
@@ -28,10 +28,10 @@ const scheduledRun = async () => {
     plantsByUser.forEach(async (plant) => {
       let dayCounter = Math.floor((Date.now() - plant.baseDate) / 86400000);
       if (dayCounter % plant.water_freq === 0) {
-        plantsToWater =`, ${plant.nickname}`;
+        plantsToWater = `, ${plant.nickname}`;
       }
     });
-    if(plantsToWater.length > 1){
+    if (plantsToWater.length > 1) {
       mailSender(user.user_email, plantsToWater);
     }
   });
