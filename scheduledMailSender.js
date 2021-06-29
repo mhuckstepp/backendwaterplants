@@ -1,11 +1,14 @@
+require("dotenv").config();
 const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const db = require("./api/data/db-config");
 
+
 const mailSender = async (recip, plants) => {
+  console.log(process.env.SENDGRID_API_KEY);
   const msg = {
     to: recip,
-    from: "mhuckstepp@gmail.com",
+    from: "test@emailplants.com",
     subject: "Plants to water today!",
     text: `Please water these plants today! ${plants}. To view all your plants, please visit https://water-my-plants-mhuckstepp.vercel.app/myplants`,
     html: `Please water these plants today! ${plants}. To view all your plants, please visit https://water-my-plants-mhuckstepp.vercel.app/myplants <p>`,
