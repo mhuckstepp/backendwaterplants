@@ -51,6 +51,7 @@ router.get("/all", restrictAccess, (req, res, next) => {
 });
 
 router.use("/", (req, res, next) => {
+  //eslint-disable-line
   res.json("welcome to plants router");
 });
 

@@ -34,7 +34,7 @@ router.get("/", restrictAccess, (req, res, next) => {
     .catch(next);
 });
 
-router.get("/all", (req, res, next) => {
+router.get("/all", restrictAccess, (req, res, next) => {
   getAllUsers()
     .then((users) => {
       res.status(200).json(users);
