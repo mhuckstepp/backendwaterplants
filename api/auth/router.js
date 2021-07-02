@@ -5,7 +5,7 @@ const {
   hashPass,
   makeToken,
 } = require("./middleware");
-const { addUser, getUserByEmail, editUser } = require("./models");
+const { addUser, getUserByEmail, getAllUsers, editUser } = require("./models");
 const restrictAccess = require("./restrictAccess");
 
 router.post("/login", validateLogin, (req, res, next) => {
@@ -30,6 +30,14 @@ router.get("/", restrictAccess, (req, res, next) => {
         email: user.user_email,
         created_at: user.created_at,
       });
+    })
+    .catch(next);
+});
+
+router.get("/all", (req, res, next) => {
+  getAllUsers()
+    .then((users) => {
+      res.status(200).json(users);
     })
     .catch(next);
 });

@@ -5,21 +5,14 @@ const db = require("./api/data/db-config");
 
 
 const mailSender = async (recip, plants) => {
-  console.log(process.env.SENDGRID_API_KEY);
-  // const msg = {
-  //   to: 'mhuckstepp@gmail.com',
-  //   from: "test@emailplants.com",
-  //   subject: "Plants to water today!",
-  //   text: `Please water these plants today! ${plants}. To view all your plants, please visit https://water-my-plants-mhuckstepp.vercel.app/myplants`,
-  //   html: `Please water these plants today! ${plants}. To view all your plants, please visit https://water-my-plants-mhuckstepp.vercel.app/myplants <p>`,
-  // };
+  console.log('mail sender run')
   const msg = {
-    to: 'mhuckstepp@gmail.com', // Change to your recipient
-    from: 'test@emailplants.com', // Change to your verified sender
-    subject: 'Sending with SendGrid is Fun',
-    text: 'and easy to do anywhere, even with Node.js',
-    html: '<strong>and easy to do anywhere, even with Node.js</strong>',
-  }
+    to: `${recip}`,
+    from: "test@emailplants.com",
+    subject: "Plants to water today!",
+    text: `Please water these plants today! ${plants}. To view all your plants, please visit https://water-my-plants-mhuckstepp.vercel.app/myplants`,
+    html: `<p> Please water these plants today!</p> <h3> ${plants} </h3> <br> <p> To view all your plants, please visit https://water-my-plants-mhuckstepp.vercel.app/myplants </p>`,
+  };
   sgMail
     .send(msg)
     .then(() => {

@@ -1,5 +1,10 @@
 const db = require("../data/db-config");
 
+const getAllUsers = async () => {
+  let users = await db("users");
+  return users;
+};
+
 const getUserByEmail = async (email) => {
   let [user] = await db("users").where({ user_email: email });
   return user;
@@ -37,4 +42,5 @@ module.exports = {
   addUser,
   getUserByEmail,
   editUser,
+  getAllUsers
 };
