@@ -3,9 +3,7 @@ const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 const db = require("./api/data/db-config");
 
-
 const mailSender = async (recip, plants) => {
-  console.log('mail sender run')
   const msg = {
     to: `${recip}`,
     from: "test@emailplants.com",
