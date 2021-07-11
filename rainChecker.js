@@ -11,6 +11,7 @@ const rainCheckerFunc = async () => {
     .get(cityUrl)
     .then(async (response) => {
       let weather = response.data.weather[0].main;
+      console.log('rainchecker run', weather)
       if (/rain/i.test(weather) || /showers/i.test(weather)) {
         await db("plants").update({ baseDate: Date.now() });
       }
