@@ -12,8 +12,8 @@ server.use(cors());
 server.use("/api/auth", AuthRouter);
 server.use("/api/plants", PlantRouter);
 
+//eslint-disable-next-line
 server.use((err, req, res, next) => {
-  //eslint-disable-line
   res.status(500).json({ error: err, message: err.message });
 });
 
