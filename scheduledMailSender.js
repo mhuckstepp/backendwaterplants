@@ -33,6 +33,7 @@ const scheduledRun = async () => {
       }
     });
     if (plantsToWater.length > 1) {
+      console.log(`sending email to ${user.user_email} about ${plantsToWater} `)
       mailSender(user.user_email, plantsToWater);
     }
   });
