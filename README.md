@@ -2,4 +2,4 @@ I built this app to help people remember to water their plants at the right time
 
 Built with React, Redux, Node, Express, Postgres, Knex, bcrpyt, JWT, Styled Components, Heroku Scheduler, SendGrid API, OpenWeather API
 
-
+*test*
