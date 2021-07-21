@@ -29,7 +29,11 @@ const scheduledRun = async () => {
     plantsByUser.forEach(async (plant) => {
       let dayCounter = Math.floor((Date.now() - plant.baseDate) / 86400000);
       if (dayCounter % plant.water_freq === 0) {
-        plantsToWater = `, ${plant.nickname}`;
+        if (plantsToWater.length === 0) {
+          plantsToWater = `${plant.nickname}.`
+        } else {
+          plantsToWater = `${plant.nickname}, ` + plantsToWater;
+        }
       }
     });
     if (plantsToWater.length > 1) {
