@@ -30,19 +30,22 @@ const scheduledRun = async () => {
       let dayCounter = Math.floor((Date.now() - plant.baseDate) / 86400000);
       if (dayCounter % plant.water_freq === 0) {
         if (plantsToWater.length === 0) {
-          plantsToWater = `${plant.nickname}.`
+          plantsToWater = `${plant.nickname}.`;
         } else {
           plantsToWater = `${plant.nickname}, ` + plantsToWater;
         }
       }
     });
     if (plantsToWater.length > 1) {
-      console.log(`sending email to ${user.user_email} about ${plantsToWater} `)
+      console.log(
+        `sending email to ${user.user_email} about ${plantsToWater} `
+      );
       mailSender(user.user_email, plantsToWater);
     } else {
-        console.log("Checked for plants to be watered but didn't find any")
+      console.log("Checked for plants to be watered but didn't find any");
     }
   });
 };
+
 
 scheduledRun();
