@@ -23,6 +23,7 @@ const addUser = async (user) => {
     {
       user_email: user.email,
       user_password: user.password,
+      location: user.city
     },
     ["user_id"]
   );
@@ -30,7 +31,7 @@ const addUser = async (user) => {
 };
 
 const editUser = async (user_id, newUser) => {
-  let user = await db("users")
+  await db("users")
     .where({ user_id })
     .first()
     .update({ user_email: newUser.email, user_password: newUser.password });
