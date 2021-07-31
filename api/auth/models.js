@@ -30,6 +30,7 @@ const addUser = async (user) => {
   return getUserById(user_id);
 };
 
+// .update({ user_email: newUser.email, user_password: newUser.password });
 const editUser = async (user_id, newUser) => {
   await db("users")
     .where({ user_id })
@@ -38,7 +39,6 @@ const editUser = async (user_id, newUser) => {
   return getUserById(user_id);
 };
 
-// .update({ user_email: newUser.email, user_password: newUser.password });
 module.exports = {
   addUser,
   getUserByEmail,

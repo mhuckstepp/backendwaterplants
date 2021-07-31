@@ -9,7 +9,7 @@ const rainCheckerFunc = async () => {
   for (const user of users) {
     let place = user.location;
     let user_id = user.user_id;
-    // if we dont have weather for that specific place go and get it
+    // if we haven't checked the weather for that specific place go and get check it
     if (!rainCheckMemo[place]) {
       await axios
         .get(
@@ -27,7 +27,7 @@ const rainCheckerFunc = async () => {
         .catch((err) => console.log(err));
     }
     // if it rained there reset the plants watering date
-    if (rainCheckMemo[place] === "rain") {
+    if (rainCheckMemo[place] && rainCheckMemo[place] === "rain") {
       await db("plants").update({ baseDate: Date.now() }).where({ user_id });
     }
   }
