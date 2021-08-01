@@ -16,6 +16,14 @@ Lists all plants from all users.
 GET /api/plants/all
 ```
 
+##### If client does not include a token
+
+```bash
+Status: 401 Unauthorized
+```
+
+##### If client includes a valid token
+
 ```bash
 Status: 200 OK
 ```
@@ -84,7 +92,9 @@ Status: 401 Unauthorized
 ```
 
 ```json
-{ "message": "Please Sign In to access this page" }
+{ 
+"message": "Please Sign In to access this page" 
+}
 ```
 
 ```bash
@@ -119,7 +129,7 @@ Status: 200 OK
 
 ### 🔐 Create a plant for the authenticated user
 
-Creates an item in the menu for the authenticated user.
+Creates a plant for the authenticated user.
 
 ```bash
 POST /api/plants
@@ -178,10 +188,11 @@ PUT /api/plants/:id
 
 | Name          | Type     | Description                                |
 | ------------- | :------- | :----------------------------------------- |
-| `name`        | `string` | **Required**. The item's name              |
-| `description` | `string` | **Required**. The item's description       |
-| `price`       | `number` | **Required**. The item's price in cents.   |
-| `image`       | `string` | **Required**. The URL of the item's image. |
+| `nickname`    | `string` | **Required**. The plants name                                |
+| `water_freq`  | `number` | **Required**. How often to water                             |
+| `species`     | `string` | The plant species                                            |
+| `img`         | `string` | The URL of the item's image.                                 |
+| `baseDate`    | `number` | **Required**. Unix Timestamp of creation or last water date  |
 
 If you only need to update some of the item properties, use the `PATCH /api/menu/items/:id` endpoint.
 
@@ -235,10 +246,10 @@ Status: 200 OK
 
 ### 🔐 Remove a plant
 
-Remove an plant.
+Remove a plant.
 
 ```
-DELETE /api/plants/items/:id
+DELETE /api/plants/:id
 ```
 
 #### Response
@@ -246,7 +257,13 @@ DELETE /api/plants/items/:id
 ##### If item is not found
 
 ```bash
-Status: 404 Not Found
+Status: 404 Not found
+```
+
+```json
+{ 
+"message": "We couldn't find that plant, check the id and try again"
+}
 ```
 
 ##### If item is found
@@ -255,42 +272,8 @@ Status: 404 Not Found
 Status: 204 No Content
 ```
 
-### 🔐 Reset the list
-
-Reset the menu database to its default values.
-
-```bash
-GET /api/menu/reset
-```
-
-#### Response
-
-```bash
-Status: 200 OK
-```
-
 ```json
-[
-  {
-    "id": 1,
-    "name": "Burger",
-    "price": 599,
-    "description": "Tasty",
-    "image": "https://cdn.auth0.com/blog/whatabyte/burger-sm.png"
-  },
-  {
-    "id": 2,
-    "name": "Pizza",
-    "price": 299,
-    "description": "Cheesy",
-    "image": "https://cdn.auth0.com/blog/whatabyte/pizza-sm.png"
-  },
-  {
-    "id": 3,
-    "name": "Tea",
-    "price": 199,
-    "description": "Informative",
-    "image": "https://cdn.auth0.com/blog/whatabyte/tea-sm.png"
-  }
-]
+{ 
+"message": `plant with id: ':id' was deleted`"
+}
 ```
