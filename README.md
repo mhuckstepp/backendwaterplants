@@ -2,15 +2,25 @@ I built this app to help people remember to water their plants at the right time
 
 Built with React, Redux, Node, Express, Postgres, Knex, bcrpyt, JWT, Styled Components, Heroku Scheduler, SendGrid API, OpenWeather API
 
-WaterMyPlants API
-API Endpoints
+# WaterMyPlants API
 
-🔐 List Plants
+
+## API Endpoints
+
+> 🔐 Protected Endpoints: These endpoints require the request to include an access token in the authorization header.
+
+### 🔐 List Plants
 Lists all plants from all users.
 
+```bash
 GET /api/plants/all
-Response
+```
+
+```bash
 Status: 200 OK
+```
+
+```json
 [
     {
         "id": 3,
@@ -53,148 +63,213 @@ Status: 200 OK
         "species": "Unknown"
     }
 ]
-🔓 Get a plant
-Provides information an item from the menu.
+```
 
-GET /api/menu/items/:id
-Response
-If item is not found
-Status: 404 Not Found
-If item is found
+
+
+### 🔐 Get plants by user
+
+Provides a list of all plants from one user
+
+```bash
+GET /api/plants/
+```
+
+#### Response
+
+##### If client does not include a token
+
+```bash
+Status: 401 Unauthorized
+```
+
+```json
+{ "message": "Please Sign In to access this page" }
+```
+
+```bash
 Status: 200 OK
-{
-  "id": 1,
-  "name": "Burger",
-  "price": 599,
-  "description": "Tasty",
-  "image": "https://cdn.auth0.com/blog/whatabyte/burger-sm.png"
-}
-🔐 Protected Endpoints: These endpoints require the request to include an access token issued by Auth0 in the authorization header.
+```
 
-🔐 Create an item for the authenticated user
+```json
+[
+    {
+        "id": 18,
+        "nickname": "Mini tree from neighbor ",
+        "water_freq": "7",
+        "img": "https://www.gardeningknowhow.com/wp-content/uploads/2021/01/succulent-bonsai.jpg",
+        "baseDate": "1627663327765",
+        "user_id": 6,
+        "species_id": 10,
+        "species": "Unknown"
+    },
+    {
+        "id": 4,
+        "nickname": "Costco Succulent",
+        "water_freq": "7",
+        "img": "https://target.scene7.com/is/image/Target/GUEST_380ea518-1fe9-4611-b172-c068ea5a77b9?wid=488&hei=488&fmt=pjpeg",
+        "baseDate": "1627663329393",
+        "user_id": 6,
+        "species_id": 4,
+        "species": "corn plant"
+    }
+```
+
+
+
+### 🔐 Create a plant for the authenticated user
+
 Creates an item in the menu for the authenticated user.
 
-POST /api/menu/items
-Input
-Name	Type	Description
-name	string	Required. The item's name
-description	string	Required. The item's description
-price	number	Required. The item's price in cents.
-image	string	Required. The URL of the item's image.
-Example
+```bash
+POST /api/plants
+```
+
+#### Input
+
+| Name          | Type     | Description                                |
+| ------------- | :------- | :----------------------------------------- |
+| `nickname`    | `string` | **Required**. The plants name                                |
+| `water_freq`  | `number` | **Required**. How often to water                             |
+| `species`     | `string` | The plant species                                            |
+| `img`         | `string` | The URL of the item's image.                                 |
+| `baseDate`    | `number` | **Required**. Unix Timestamp of creation or last water date  |
+
+##### Example
+
+```json
 {
-  "name": "Salad",
-  "price": 4.99,
-  "description": "Fresh",
-  "image": "https://cdn.auth0.com/blog/whatabyte/salad-sm.png"
+    "nickname": "Rose Bush",
+    "species": "Roses",
+    "water_freq": 3,
+    "img": "https://img.totallandscapecare.com/files/base/randallreilly/all/image/2018/02/tlc.shutterstock_137343065.png?auto=format&fit=max&w=1440",
+    "baseDate": 1627845209358
 }
-Response
+```
+
+#### Response
+
+```bash
 Status: 201 Created
+```
+
+```json
 {
-  "id": "QvcDfWMwg",
-  "name": "Salad",
-  "price": 4.99,
-  "description": "Fresh",
-  "image": "https://cdn.auth0.com/blog/whatabyte/salad-sm.png"
+    "id": 56,
+    "nickname": "Rose Bush",
+    "water_freq": "3",
+    "img": "https://img.totallandscapecare.com/files/base/randallreilly/all/image/2018/02/tlc.shutterstock_137343065.png?auto=format&fit=max&w=1440",
+    "baseDate": "1627845347543",
+    "user_id": 6,
+    "species_id": 49,
+    "species": "Roses"
 }
-🔐 Update an item
+```
+
+### 🔐 Update an item
+
 Update an item from the menu by overwriting the entire entity. You must send the entire resource in the request.
 
-PUT /api/menu/items/:id
-Input
-Name	Type	Description
-name	string	Required. The item's name
-description	string	Required. The item's description
-price	number	Required. The item's price in cents.
-image	string	Required. The URL of the item's image.
-If you only need to update some of the item properties, use the PATCH /api/menu/items/:id endpoint.
+```bash
+PUT /api/plants/:id
+```
 
-Example
+#### Input
+
+| Name          | Type     | Description                                |
+| ------------- | :------- | :----------------------------------------- |
+| `name`        | `string` | **Required**. The item's name              |
+| `description` | `string` | **Required**. The item's description       |
+| `price`       | `number` | **Required**. The item's price in cents.   |
+| `image`       | `string` | **Required**. The URL of the item's image. |
+
+If you only need to update some of the item properties, use the `PATCH /api/menu/items/:id` endpoint.
+
+##### Example
+
 Take the following item as an example:
 
+```json
 {
-  "name": "Burger",
-  "price": 599,
-  "description": "Tasty",
-  "image": "https://cdn.auth0.com/blog/whatabyte/burger-sm.png"
+  "nickname": "Mini tree from neighbor ",
+  "species": "Unknown",
+  "water_freq": 6,
+  "id": 18,
+  "img": "https://www.gardeningknowhow.com/wp-content/uploads/2021/01/succulent-bonsai.jpg",
+  "baseDate": "1627663327765"
 }
-If you want to update the description only, you'll send a request body like the following:
+```
 
-{
-  "name": "Burger",
-  "price": 599,
-  "description": "Juicy",
-  "image": "https://cdn.auth0.com/blog/whatabyte/burger-sm.png"
+#### Response
+
+##### If item is not found
+
+```bash
+Status: 404 Not found
+```
+
+```json
+{ 
+"message": "We couldn't find that plant, check the id and try again"
 }
-Response
-If item is not found
-Status: 201 Created
-{
-  "id": "QvcDfWMwg",
-  "name": "Salad",
-  "price": 4.99,
-  "description": "Fresh",
-  "image": "https://cdn.auth0.com/blog/whatabyte/salad-sm.png"
-}
-If item is found
+```
+
+##### If item is found
+
+```bash
 Status: 200 OK
-{
-  "id": "QvcDfWMwg",
-  "name": "Salad",
-  "price": 4.99,
-  "description": "Fresh",
-  "image": "https://cdn.auth0.com/blog/whatabyte/salad-sm.png"
-}
-🔐 Patch an item
-Update certain properties of an item from the menu. Only requires you to send the data that you want to update.
+```
 
-PATCH /api/menu/items/:id
-Input
-Name	Type	Description
-name	string	Optional. The item's name
-description	string	Optional. The item's description
-price	number	Optional. The item's price in cents.
-image	string	Optional. The URL of the item's image.
-Example
-Take the following item as an example:
-
+```json
 {
-  "name": "Burger",
-  "price": 599,
-  "description": "Tasty",
-  "image": "https://cdn.auth0.com/blog/whatabyte/burger-sm.png"
+    "id": 18,
+    "nickname": "Mini tree from neighbor ",
+    "water_freq": "6",
+    "img": "https://www.gardeningknowhow.com/wp-content/uploads/2021/01/succulent-bonsai.jpg",
+    "baseDate": "1627663327765",
+    "user_id": 6,
+    "species_id": 10,
+    "species": "Unknown"
 }
-If you want to update the description only, you'll send a request body like the following:
+```
 
-{
-  "description": "Juicy"
-}
-Response
-If item is not found
+### 🔐 Remove a plant
+
+Remove an plant.
+
+```
+DELETE /api/plants/items/:id
+```
+
+#### Response
+
+##### If item is not found
+
+```bash
 Status: 404 Not Found
-If item is found
-Status: 204 No Content
-🔐 Remove all items
-Remove all items from the menu.
+```
 
-DELETE /api/menu/items
-Response
-Status: 204 No Content
-🔐 Remove an item
-Remove an item from the menu.
+##### If item is found
 
-DELETE /api/menu/items/:id
-Response
-If item is not found
-Status: 404 Not Found
-If item is found
+```bash
 Status: 204 No Content
-🔐 Reset the list
+```
+
+### 🔐 Reset the list
+
 Reset the menu database to its default values.
 
+```bash
 GET /api/menu/reset
-Response
+```
+
+#### Response
+
+```bash
 Status: 200 OK
+```
+
+```json
 [
   {
     "id": 1,
@@ -218,3 +293,4 @@ Status: 200 OK
     "image": "https://cdn.auth0.com/blog/whatabyte/tea-sm.png"
   }
 ]
+```
