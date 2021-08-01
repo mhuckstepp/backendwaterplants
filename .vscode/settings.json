@@ -1,12 +1,4 @@
 {
-    "cSpell.ignoreWords": [
-        "mywaterplants",
-        "rainchecker"
-    ],
-    "cSpell.words": [
-        "api",
-        "key",
-        "recip",
-        "sendgrid"
-    ]
+  "cSpell.ignoreWords": ["knexfile", "mywaterplants", "rainchecker"],
+  "cSpell.words": ["api", "key", "recip", "sendgrid"]
 }

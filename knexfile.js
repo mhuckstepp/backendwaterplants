@@ -1,44 +1,40 @@
-require('dotenv').config()
-/*
-
-  PORT=5000
-  NODE_ENV=development
-  DEV_DATABASE_URL='postgresql://postgres:password@localhost:5432/database_name'
-  TESTING_DATABASE_URL='postgresql://postgres:password@localhost:5432/testing_database_name'
-
-  Put the above in your .env file. Some adjustments in the connection URLs will be needed:
-
-    - 5432 (this is the default TCP port for PostgreSQL, should work as is and can be omitted)
-    - postgres (in postgres:password, this is the default superadmin user, might work as is)
-    - password (in postgres:password, replace with the actual password set in pgAdmin 4)
-    - database_name (use the real name of the development database you created in pgAdmin 4)
-    - testing_database_name (use the real name of the testing database you created in pgAdmin 4)
-
-*/
-const pg = require('pg')
-
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const dotenv = __importStar(require("dotenv"));
+dotenv.config();
+const pg_1 = __importDefault(require("pg"));
 if (process.env.DATABASE_URL) {
-  pg.defaults.ssl = { rejectUnauthorized: false }
+    pg_1.default.defaults.ssl = { rejectUnauthorized: false };
 }
-
 const sharedConfig = {
-  client: 'pg',
-  migrations: { directory: './api/data/migrations' },
-  seeds: { directory: './api/data/seeds' },
-}
-
+    client: 'pg',
+    migrations: { directory: './api/data/migrations' },
+    seeds: { directory: './api/data/seeds' },
+};
 module.exports = {
-  development: {
-    ...sharedConfig,
-    connection: process.env.DEV_DATABASE_URL,
-  },
-  testing: {
-    ...sharedConfig,
-    connection: process.env.TESTING_DATABASE_URL,
-  },
-  production: {
-    ...sharedConfig,
-    connection: process.env.DATABASE_URL,
-    pool: { min: 2, max: 10 },
-  },
-}
+    development: Object.assign(Object.assign({}, sharedConfig), { connection: process.env.DEV_DATABASE_URL }),
+    testing: Object.assign(Object.assign({}, sharedConfig), { connection: process.env.TESTING_DATABASE_URL }),
+    production: Object.assign(Object.assign({}, sharedConfig), { connection: process.env.DATABASE_URL, pool: { min: 2, max: 10 } }),
+};
