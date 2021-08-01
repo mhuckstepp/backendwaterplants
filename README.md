@@ -143,7 +143,7 @@ POST /api/plants
 | `water_freq`  | `number` | **Required**. How often to water                             |
 | `species`     | `string` | The plant species                                            |
 | `img`         | `string` | The URL of the item's image.                                 |
-| `baseDate`    | `number` | **Required**. Unix Timestamp of creation or last water date  |
+| `baseDate`    | `number` | **Required**. Unix Timestamp of creation time or last water time. This is used to calculated next watering  |
 
 ##### Example
 
@@ -274,6 +274,6 @@ Status: 204 No Content
 
 ```json
 { 
-"message": `plant with id: ':id' was deleted`"
+"message": "plant with id: ':id' was deleted"
 }
 ```
