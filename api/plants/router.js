@@ -19,9 +19,9 @@ router.post("/", restrictAccess, (req, res, next) => {
 
 router.delete("/:id", restrictAccess, checkPlantExists, (req, res, next) => {
   delPlant(req.params.id)
-    .then((plant) => {
-      //eslint-disable-line
-      res.status(201).json(`plant with id:${req.params.id} was deleted`);
+  //eslint-disable-next-line
+    .then((_) => {
+      res.status(204).json({ message: `plant with id:${req.params.id} was deleted` });
     })
     .catch(next);
 });
@@ -29,7 +29,7 @@ router.delete("/:id", restrictAccess, checkPlantExists, (req, res, next) => {
 router.put("/:id", restrictAccess, checkPlantExists, (req, res, next) => {
   updatePlant(req.params.id, req.body)
     .then((plant) => {
-      res.status(201).json(plant);
+      res.status(200).json(plant);
     })
     .catch(next);
 });
@@ -37,7 +37,7 @@ router.put("/:id", restrictAccess, checkPlantExists, (req, res, next) => {
 router.get("/", restrictAccess, (req, res, next) => {
   getPlantsByUser(req.decodedToken)
     .then((plants) => {
-      res.status(201).json(plants);
+      res.status(200).json(plants);
     })
     .catch(next);
 });
@@ -45,7 +45,7 @@ router.get("/", restrictAccess, (req, res, next) => {
 router.get("/all", restrictAccess, (req, res, next) => {
   getPlants()
     .then((plants) => {
-      res.status(201).json(plants);
+      res.status(200).json(plants);
     })
     .catch(next);
 });

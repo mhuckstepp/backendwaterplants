@@ -8,7 +8,7 @@ const checkPlantExists = (req, res, next) => {
       } else {
         res
           .status(404)
-          .json("We couldnt find that plant, check the id and try again");
+          .json({ message: "We couldn't find that plant, check the id and try again"});
       }
     })
     .catch(next);
