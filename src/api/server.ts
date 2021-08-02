@@ -1,8 +1,8 @@
-const express = require("express");
-const helmet = require("helmet");
-const cors = require("cors");
-const AuthRouter = require("./auth/router");
-const PlantRouter = require("./plants/router");
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import AuthRouter from "./auth/router";
+import PlantRouter from "./plants/router";
 
 const server = express();
 server.use(express.json());
@@ -13,8 +13,8 @@ server.use("/api/auth", AuthRouter);
 server.use("/api/plants", PlantRouter);
 
 //eslint-disable-next-line
-server.use((err, req, res, next) => {
+server.use((err: any, req: any, res: any, next: any) => {
   res.status(500).json({ error: err, message: err.message });
 });
 
-module.exports = server;
+export default server

@@ -1,19 +1,22 @@
-const router = require("express").Router();
-const {
+import express, { NextFunction, Response } from "express"
+import { ReqWithToken, ReqWithUser } from "../definitions"
+import {
   validateLogin,
   validateRegister,
   hashPass,
   makeToken,
-} = require("./middleware");
-const { addUser, getUserByEmail, getAllUsers, editUser } = require("./models");
-const restrictAccess = require("./restrictAccess");
+} from "./middleware"
+import { addUser, getUserByEmail, getAllUsers, editUser } from "./models"
+import restrictAccess from "./restrictAccess"
 
-router.post("/login", validateLogin, (req, res, next) => {
-  const token = makeToken(req.foundUser);
+const router = express.Router()
+
+router.post("/login", validateLogin, (req: ReqWithUser, res: Response, next: NextFunction) => {
+  const token = makeToken(req.user);
   res.status(200).json({ message: `welcome back ${req.body.email}`, token });
 });
 
-router.put("/", restrictAccess, hashPass, (req, res, next) => {
+router.put("/", restrictAccess, hashPass, (req: ReqWithToken, res: Response, next: NextFunction) => {
   editUser(req.decodedToken.subject, req.body)
     .then((user) => {
       const token = makeToken(user);
@@ -22,7 +25,7 @@ router.put("/", restrictAccess, hashPass, (req, res, next) => {
     .catch(next);
 });
 
-router.get("/", restrictAccess, (req, res, next) => {
+router.get("/", restrictAccess, (req: ReqWithToken, res: Response, next: NextFunction) => {
   getUserByEmail(req.decodedToken.email)
     .then((user) => {
       res.status(200).json({
@@ -34,7 +37,7 @@ router.get("/", restrictAccess, (req, res, next) => {
     .catch(next);
 });
 
-router.get("/all", restrictAccess, (req, res, next) => {
+router.get("/all", restrictAccess, (req: ReqWithToken, res: Response, next: NextFunction) => {
   getAllUsers()
     .then((users) => {
       res.status(200).json(users);
@@ -45,7 +48,7 @@ router.get("/all", restrictAccess, (req, res, next) => {
 router.post("/register", validateRegister, hashPass, async (req, res, next) => {
   addUser(req.body)
     .then((user) => {
-      const token = makeToken({ user_id: user.id, user_email: user.email });
+      const token = makeToken(user);
       res.status(201).json({ token });
     })
     .catch(next);
@@ -55,4 +58,4 @@ router.use("/", (req, res, next) => {
   res.json("welcome to auth router");
 });
 
-module.exports = router;
+export default router

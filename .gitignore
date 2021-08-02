@@ -43,6 +43,9 @@ node_modules/
 jspm_packages/
 package-lock.json
 
+# js dist from tsc
+dist/
+
 # Snowpack dependency directory (https://snowpack.dev/)
 web_modules/
 

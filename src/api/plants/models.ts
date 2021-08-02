@@ -1,14 +1,17 @@
-const db = require("../data/db-config");
+import { Knex } from "knex";
+import { TokenUser } from "../auth/user.interface";
+import db from "../data/db-config"
+import { BasePlant, Plant } from "./plant.interface";
 
-const getPlants = () => {
+export const getPlants = () => {
   return db("plants as p").join("species as s", "p.species_id", "s.id");
 };
 
-const delPlant = (id) => {
+export const delPlant = (id: number) => {
   return db("plants as p").del().where({ id });
 };
 
-const getPlantsByUser = (userInfo) => {
+export const getPlantsByUser = (userInfo: TokenUser) => {
   return db("plants as p")
     .join("species as s", "p.species_id", "s.id")
     .join("users as u", "p.user_id", "u.user_id")
@@ -16,7 +19,7 @@ const getPlantsByUser = (userInfo) => {
     .where({ "u.user_id": userInfo.subject });
 };
 
-const getPlantsByPlant = (plantId) => {
+export const getPlantsByPlant = (plantId: number) => {
   return db("plants as p")
     .join("species as s", "p.species_id", "s.id")
     .join("users as u", "p.user_id", "u.user_id")
@@ -25,10 +28,10 @@ const getPlantsByPlant = (plantId) => {
     .first();
 };
 
-const updatePlant = async (plantId, plant) => {
+export const updatePlant = async (plantId: number, plant: Plant) => {
   let plant_id;
 
-  await db.transaction(async (trx) => {
+  await db.transaction(async (trx: Knex.Transaction) => {
     const { nickname, water_freq, img, baseDate, species } = plant;
     // insert species
     let species_id;
@@ -62,10 +65,10 @@ const updatePlant = async (plantId, plant) => {
   return getPlantsByPlant(plant_id);
 };
 
-const addPlant = async (user_id, plant) => {
+export const addPlant = async (user_id: number, plant: BasePlant) => {
   const { nickname, water_freq, species, img, baseDate } = plant;
   let plant_id;
-  await db.transaction(async (trx) => {
+  await db.transaction(async (trx: Knex.Transaction) => {
     // insert species
     let species_id;
     const [existing_species] = await trx("species").where({ species });
@@ -85,13 +88,4 @@ const addPlant = async (user_id, plant) => {
     plant_id = id;
   });
   return getPlantsByPlant(plant_id);
-};
-
-module.exports = {
-  getPlantsByUser,
-  getPlants,
-  addPlant,
-  delPlant,
-  getPlantsByPlant,
-  updatePlant,
 };

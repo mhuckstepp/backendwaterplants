@@ -1,29 +1,28 @@
-const db = require("../data/db-config");
+import db from "../data/db-config";
+import { BaseUser, FrontEndUser } from "./user.interface";
 
-const getAllUsers = async () => {
+export const getAllUsers = async () => {
   let users = await db("users");
   return users;
 };
 
-const getUserByEmail = async (email) => {
+export const getUserByEmail = async (email: string) => {
   let [user] = await db("users").where({ user_email: email });
   return user;
 };
 
-const getUserById = async (id) => {
+export const getUserById = async (id: number) => {
   let [user] = await db("users").where({ user_id: id });
-  return {
-    id: user.user_id,
-    email: user.user_email,
-  };
+  console.log(user);
+  return user;
 };
 
-const addUser = async (user) => {
+export const addUser = async (user: FrontEndUser) => {
   let [{ user_id }] = await db("users").insert(
     {
       user_email: user.email,
       user_password: user.password,
-      location: user.city
+      location: user.city,
     },
     ["user_id"]
   );
@@ -31,17 +30,10 @@ const addUser = async (user) => {
 };
 
 // .update({ user_email: newUser.email, user_password: newUser.password });
-const editUser = async (user_id, newUser) => {
+export const editUser = async (user_id: number, newUser: FrontEndUser) => {
   await db("users")
     .where({ user_id })
     .first()
     .update({ user_email: newUser.email, user_password: newUser.password });
   return getUserById(user_id);
-};
-
-module.exports = {
-  addUser,
-  getUserByEmail,
-  editUser,
-  getAllUsers
 };

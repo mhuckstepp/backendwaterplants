@@ -1,14 +1,15 @@
 require("dotenv").config();
-const axios = require("axios");
-const db = require("./api/data/db-config");
+import axios from "axios"
+import { User } from "./api/auth/user.interface";
+import db from "./api/data/db-config"
 let apiKey = process.env.WEATHER_API_KEY;
 
 const rainCheckerFunc = async () => {
-  const rainCheckMemo = {};
-  let users = await db("users");
+  const rainCheckMemo: any = {};
+  let users: User[] = await db("users");
   for (const user of users) {
-    let place = user.location;
-    let user_id = user.user_id;
+    let place: string = user.location;
+    let user_id: number = user.user_id;
     // if we haven't checked the weather for that specific place go and get check it
     if (!rainCheckMemo[place]) {
       await axios

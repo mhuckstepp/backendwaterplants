@@ -1,9 +1,13 @@
 require("dotenv").config();
-const sgMail = require("@sendgrid/mail");
+import sgMail from "@sendgrid/mail"
+import { User } from "./api/auth/user.interface";
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-const db = require("./api/data/db-config");
+import db from "./api/data/db-config"
+import { Plant } from "./api/plants/plant.interface";
 
-const mailSender = async (recip, plants) => {
+
+
+const mailSender = async (recip: string, plants: string) => {
   const msg = {
     to: `${recip}`,
     from: "test@emailplants.com",
@@ -23,12 +27,12 @@ const mailSender = async (recip, plants) => {
 
 const scheduledRun = async () => {
   let users = await db("users");
-  users.forEach(async (user) => {
+  users.forEach(async (user: User) => {
     let plantsToWater = "";
     let plantsByUser = await db("plants").where({ user_id: user.user_id });
-    plantsByUser.forEach(async (plant) => {
+    plantsByUser.forEach(async (plant: Plant) => {
       let dayCounter = Math.floor((Date.now() - plant.baseDate) / 86400000);
-      if (dayCounter % plant.water_freq === 0) {
+      if (dayCounter % Number(plant.water_freq) === 0) {
         if (plantsToWater.length === 0) {
           plantsToWater = `${plant.nickname}.`;
         } else {

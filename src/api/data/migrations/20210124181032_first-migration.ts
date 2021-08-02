@@ -1,4 +1,6 @@
-exports.up = async (knex) => {
+import { Knex } from "knex";
+
+exports.up = async (knex: Knex) => {
   await knex.schema.createTable("users", (users) => {
     users.increments("user_id");
     users.string("user_email", 320).unique().notNullable();
@@ -7,6 +9,6 @@ exports.up = async (knex) => {
   });
 };
 
-exports.down = async (knex) => {
+exports.down = async (knex: Knex) => {
   await knex.schema.dropTableIfExists("users");
 };
