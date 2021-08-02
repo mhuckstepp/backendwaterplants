@@ -7,7 +7,7 @@ import { Plant } from "./api/plants/plant.interface";
 
 
 
-const mailSender = async (recip: string, plants: string) => {
+export const mailSender = async (recip: string, plants: string) => {
   const msg = {
     to: `${recip}`,
     from: "test@emailplants.com",

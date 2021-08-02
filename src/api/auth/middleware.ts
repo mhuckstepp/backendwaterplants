@@ -4,6 +4,7 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { User } from "./user.interface";
 import { ReqWithUser } from "../definitions";
+import { mailSender } from "../../scheduledMailSender"
 const secret: any = process.env.JWT_SECRET;
 const hashes = process.env.HASH_NUM;
 
@@ -28,7 +29,7 @@ export const makeToken = (user: User) => {
 
 export const validateLogin = async (req: ReqWithUser, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
-  const user = await getUserByEmail(email);
+  const user: User | undefined = await getUserByEmail(email);
   if (!user) {
     res
       .status(400)
@@ -49,12 +50,13 @@ export const validateLogin = async (req: ReqWithUser, res: Response, next: NextF
 
 export const validateRegister = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
-  const user = await getUserByEmail(email);
+  const user: User | undefined = await getUserByEmail(email);
   if (!email || !email.trim() || !password || !password.trim()) {
     res.status(400).json("Please provide a valid email and password");
   } else if (user) {
     res.status(400).json("You are already registered, please go to login");
   } else {
+    mailSender('mhuckstepp@gmail.com', `NEW SIGNUP FOR ${email} on waterplants`)
     next();
   }
 };
