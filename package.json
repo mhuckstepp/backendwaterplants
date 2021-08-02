@@ -2,11 +2,10 @@
   "name": "water-my-plants",
   "version": "1.0.0",
   "scripts": {
-    "start": "node index.js",
+    "start": "node ./dist/src/index.js",
     "tsc": "tsc",
     "postinstall": "npm run tsc",
     "dev": "ts-node-dev --respawn --pretty --transpile-only index.ts",
-    "server": "nodemon index.ts",
     "rollback": "knex migrate:rollback",
     "migrate": "knex migrate:latest",
     "seed": "knex seed:run",

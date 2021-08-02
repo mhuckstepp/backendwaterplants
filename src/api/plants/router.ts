@@ -9,7 +9,7 @@ import {
 } from "./models"
 import restrictAccess from "../auth/restrictAccess"
 import { checkPlantExists } from "./middleware"
-import { Plant, BasePlant } from './plant.interface'
+import { Plant } from './plant.interface'
 
 router.post("/", restrictAccess, (req: any, res: any, next: any) => {
   addPlant(req.decodedToken.subject, req.body)
@@ -26,7 +26,7 @@ router.delete(
   (req: any, res: any, next: any) => {
     delPlant(req.params.id)
       //eslint-disable-next-line
-      .then((_) => {
+      .then((_: any) => {
         res
           .status(204)
           .json({ message: `plant with id:${req.params.id} was deleted` });
