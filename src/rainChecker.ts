@@ -1,37 +1,3 @@
-require("dotenv").config();
-import axios from "axios"
-import { User } from "./api/auth/user.interface";
-import db from "./api/data/db-config"
-let apiKey = process.env.WEATHER_API_KEY;
-
-const rainCheckerFunc = async () => {
-  const rainCheckMemo: any = {};
-  let users: User[] = await db("users");
-  for (const user of users) {
-    let place: string = user.location;
-    let user_id: number = user.user_id;
-    // if we haven't checked the weather for that specific place go and get check it
-    if (!rainCheckMemo[place]) {
-      await axios
-        .get(
-          `https://api.openweathermap.org/data/2.5/weather?q=${place}&appid=${apiKey}`
-        )
-        .then((response) => {
-          let weather = response.data.weather[0].main;
-          console.log("rainchecker run", weather);
-          if (/rain/i.test(weather) || /showers/i.test(weather)) {
-            rainCheckMemo[place] = "rain";
-          } else {
-            rainCheckMemo[place] = "No rain";
-          }
-        })
-        .catch((err) => console.log(err));
-    }
-    // if it rained there reset the plants watering date
-    if (rainCheckMemo[place] && rainCheckMemo[place] === "rain") {
-      await db("plants").update({ baseDate: Date.now() }).where({ user_id });
-    }
-  }
-};
+import {rainCheckerFunc} from './cronFuncs'
 
 rainCheckerFunc();

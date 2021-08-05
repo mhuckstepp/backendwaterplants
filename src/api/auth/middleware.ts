@@ -4,7 +4,7 @@ import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import { User } from "./user.interface";
 import { ReqWithUser } from "../definitions";
-import { mailSender } from "../../scheduledMailSender"
+import { mailSender } from "../../cronFuncs"
 const secret: any = process.env.JWT_SECRET;
 const hashes = process.env.HASH_NUM;
 
