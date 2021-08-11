@@ -1,13 +1,11 @@
 require("dotenv").config();
-import axios from "axios"
-import db from "./api/data/db-config"
+import axios from "axios";
+import db from "./api/data/db-config";
 let apiKey = process.env.WEATHER_API_KEY;
-import sgMail from "@sendgrid/mail"
+import sgMail from "@sendgrid/mail";
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 import { Plant } from "./api/plants/plant.interface";
 import { User } from "./api/auth/user.interface";
-
-
 
 export const mailSender = async (recip: string, plants: string) => {
   const msg = {
@@ -53,33 +51,29 @@ export const checkAndMail = async () => {
   });
 };
 
-
 export const rainCheckerFunc = async () => {
-  const rainCheckMemo: any = {};
-  let users: User[] = await db("users");
-  for (const user of users) {
-    let place: string = user.location;
-    let user_id: number = user.user_id;
-    // if we haven't checked the weather for that specific place go and get check it
-    if (!rainCheckMemo[place]) {
-      await axios
-        .get(
-          `https://api.openweathermap.org/data/2.5/weather?q=${place}&appid=${apiKey}`
-        )
-        .then((response) => {
-          let weather = response.data.weather[0].main;
-          console.log("rainchecker run", weather);
-          if (/rain/i.test(weather) || /showers/i.test(weather)) {
-            rainCheckMemo[place] = "rain";
-          } else {
-            rainCheckMemo[place] = "No rain";
+  let places: any[] = await db.from("users").select("location").distinct();
+  for (const place of places) {
+    console.log(place);
+    await axios
+      .get(
+        `https://api.openweathermap.org/data/2.5/weather?q=${place.location}&appid=${apiKey}`
+      )
+      .then(async (response) => {
+        let weather = response.data.weather[0].main;
+        console.log("rainchecker run", weather);
+        if (/rain/i.test(weather) || /showers/i.test(weather)) {
+          let users = await db("users")
+            .select("user_id")
+            .where("location", place.location);
+          for (const user of users) {
+            let updated = await db("plants")
+              .update("baseDate", Date.now())
+              .where("user_id", user.user_id);
+            console.log(updated);
           }
-        })
-        .catch((err) => console.log(err));
-    }
-    // if it rained there reset the plants watering date
-    if (rainCheckMemo[place] && rainCheckMemo[place] === "rain") {
-      await db("plants").update({ baseDate: Date.now() }).where({ user_id });
-    }
+        }
+      })
+      .catch((err) => console.log(err));
   }
 };

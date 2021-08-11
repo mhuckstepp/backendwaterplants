@@ -18,11 +18,12 @@ export const getUserById = async (id: number) => {
 };
 
 export const addUser = async (user: FrontEndUser) => {
+  let location = user.city.toLowerCase().split(" ").join("+");
   let [{ user_id }] = await db("users").insert(
     {
       user_email: user.email,
       user_password: user.password,
-      location: user.city,
+      location: location,
     },
     ["user_id"]
   );
